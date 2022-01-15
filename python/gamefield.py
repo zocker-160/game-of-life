@@ -23,25 +23,26 @@ class GameField:
 
     def _calcDead(self, state: bool, value: int) -> bool:
         if state == False:
-            if value == 3:
+            return value == 3
+        else:
+            if 2 <= value <= 3: 
                 return True
             else:
                 return False
-        else:
-            if value < 2: return False
-            if 2 <= value <= 3: return True
-            if value > 3: return False
 
     def _getSumLiving(self, x, y) -> int:
         neigh = list()
-        neigh.append(self._getState(x-1, y-1))
-        neigh.append(self._getState(x, y-1))
-        neigh.append(self._getState(x+1, y-1))
-        neigh.append(self._getState(x-1, y))
-        neigh.append(self._getState(x+1, y))
-        neigh.append(self._getState(x-1, y+1))
-        neigh.append(self._getState(x, y+1))
-        neigh.append(self._getState(x+1, y+1))
+
+        addState = lambda x, y: neigh.append(self._getState(x, y))
+
+        addState(x-1, y-1)
+        addState(x, y-1)
+        addState(x+1, y-1)
+        addState(x-1, y)
+        addState(x+1, y)
+        addState(x-1, y+1)
+        addState(x, y+1)
+        addState(x+1, y+1)
 
         return sum(neigh)
 
@@ -52,8 +53,9 @@ class GameField:
         else:
             return 0
 
-    def printMatrix(self):
+    def getMatrix(self, cli=True) -> str:
         from file_parser import FileParser
+        out = ""
         for row in self.data:
             _row = ""
             for char in row:
@@ -61,8 +63,11 @@ class GameField:
                     _row += FileParser.ALIVE
                 else:
                     _row += FileParser.DEAD
-            print(_row)
-        print("---- generation", self.generation)
+            out += _row + "\n"
+
+        if cli: out += f"---- generation {self.generation}"
+
+        return out
 
     def __str__(self):
         output = ""

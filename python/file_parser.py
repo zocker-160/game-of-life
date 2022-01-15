@@ -20,9 +20,13 @@ class FileParser:
                 for char in line:
                     if char == self.DEAD:
                         row.append(False)
-
-                    if char == self.ALIVE:
+                    elif char == self.ALIVE:
                         row.append(True)
+                    else:
+                        if char == "\n": continue
+
+                        raise ImportError(f"invalid character: {char}")
+
                 field.append(row)
         return field
 
